@@ -1,0 +1,33 @@
+spring:
+   application:
+      name: eurekaService
+---
+spring:
+    profiles: app01                     # 指定profiles= app01 时加载下面的配置
+server:
+     port: 8761
+
+eureka:
+    instance:
+       hostname: peer1               # 指定profiles= app01 时主机名为peer1,可以配置成ip
+    client:
+       # 以下两项一定要是false，表明自己是服务器，而不需要从其他主机发现服务
+       # registerWithEureka: false
+       # fetchRegistry: false
+       serviceUrl:
+           defaultZone: http://peer2:8762/eureka/   #将自己的服务注册到app02这个eureka上
+
+---
+spring:
+    profiles: app02                        # 指定profiles= app02 时加载下面的配置
+server:
+     port: 8762
+eureka:
+    instance:
+       hostname: peer2                     # 指定profiles= app02 时主机名为peer2,可以配置成ip
+    client:
+       # 以下两项一定要是false，表明自己是服务器，而不需要从其他主机发现服务
+       # registerWithEureka: false
+       # fetchRegistry: false
+       serviceUrl:
+           defaultZone: http://peer1:8761/eureka/    #将自己的服务注册到app01这个eureka上
